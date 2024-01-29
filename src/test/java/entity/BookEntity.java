@@ -1,7 +1,8 @@
 package entity;
 
-import es.cesguiro.entity.CiriEntity;
-import es.cesguiro.entity.CiriField;
+import es.cesguiro.annotations.TableName;
+import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.entity.CiriField;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
+@TableName("books")
 public class BookEntity extends CiriEntity {
 
     private CiriField isbn = new CiriField("isbn");

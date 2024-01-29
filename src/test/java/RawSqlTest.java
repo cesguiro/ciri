@@ -38,7 +38,6 @@ public class RawSqlTest {
     @AfterEach
     public void tearDown(){
         RawSql.rollback();
-        System.out.println("Rollback realizado");
     }
 
     @Test

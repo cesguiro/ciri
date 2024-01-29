@@ -1,4 +1,4 @@
-import dao.BookDao;
+import dao.BookCiriDao;
 import entity.BookEntity;
 import es.cesguiro.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @Log4j2
-public class CiriTest {
+public class CiriDaoTest {
 
 
     //BookFactory bookFactory = new BookFactory();
 
-    BookDao bookDao = new BookDao();
+    BookCiriDao bookCiriDao = new BookCiriDao();
 
     @BeforeAll
     public static void beforeAll(){
@@ -48,14 +48,15 @@ public class CiriTest {
 
     @Test
     public void testFindAll() {
-        bookDao.findAll();
+        List<BookEntity> bookList = bookCiriDao.findAll();
+
         /*List<BookEntity> bookEntityList = bookDao.findAll();
         assertEquals("9788426418197", bookEntityList.get(1).getIsbn().getValue());*/
     }
 
     @Test
     public  void testFindById() {
-        BookEntity bookEntity = bookDao.findById("9786074213485");
+        BookEntity bookEntity = bookCiriDao.findById("9786074213485");
 
         assertEquals("La insorportable levedad del ser", bookEntity.getTitle().getValue());
     }

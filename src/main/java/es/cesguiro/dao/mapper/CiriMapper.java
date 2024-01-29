@@ -1,24 +1,27 @@
-package es.cesguiro.mapper;
+package es.cesguiro.dao.mapper;
 
-import es.cesguiro.entity.CiriEntity;
-import es.cesguiro.entity.CiriEntityFactory;
-import es.cesguiro.entity.CiriField;
+import es.cesguiro.annotations.TableName;
+import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.entity.CiriEntityFactory;
+import es.cesguiro.dao.entity.CiriField;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class CiriMapper<T extends CiriEntity>{
+public class CiriMapper{
 
-    private final CiriEntityFactory<T> ciriEntityFactory;
+    //private final CiriEntityFactory<T> ciriEntityFactory;
+    private CiriEntity ciriEntity;
 
-    public CiriMapper(CiriEntityFactory<T> ciriEntityFactory) {
-        this.ciriEntityFactory = ciriEntityFactory;
+    public CiriMapper(CiriEntity ciriEntity) {
+        this.ciriEntity = ciriEntity;
     }
 
-    public T toCiriEntity(ResultSet resultSet) {
-        if(resultSet == null) {
+    public CiriEntity toCiriEntity(ResultSet resultSet) {
+        /*if(resultSet == null) {
             return null;
         }
         T ciriEntity = ciriEntityFactory.createEntity();
@@ -34,10 +37,11 @@ public class CiriMapper<T extends CiriEntity>{
             return ciriEntity;
         } catch (SQLException | IllegalAccessException e) {
             throw new RuntimeException("Error al mapear ResultSet a CiriEntity: " + e.getMessage(), e);
-        }
+        }*/
+        return null;
     }
 
-    public List<T> toCiriEntityList(ResultSet resultSet) {
+    /*public List<T> toCiriEntityList(ResultSet resultSet) {
         if(resultSet ==  null) {
             return Collections.emptyList();
         }
@@ -50,5 +54,15 @@ public class CiriMapper<T extends CiriEntity>{
             throw new RuntimeException("Algo no ha funcionado: " + e.getMessage());
         }
         return ciriEntityList;
+    }*/
+
+    private String getTableNameFromEntityAnnotation(){
+        Class<?> entityType = (Class<?>) ((ParameterizedType) ciriEntity.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+
+        TableName tableNameAnnotation = entityType.getAnnotation(TableName.class);
+        if (tableNameAnnotation == null) {
+            throw new RuntimeException("La entidad no tiene la anotación TableName");
+        }
+        return tableNameAnnotation.value();
     }
 }
