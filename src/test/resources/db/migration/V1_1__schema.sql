@@ -1,4 +1,4 @@
-CREATE TABLE publisher (
+CREATE TABLE publishers (
                            id INT PRIMARY KEY AUTO_INCREMENT,
                            name VARCHAR(255) NOT NULL
 );
@@ -11,7 +11,7 @@ CREATE TABLE books (
                        publisher_id INT,
                        price DECIMAL(10, 2) NOT NULL,
                        cover VARCHAR(255),
-                       FOREIGN KEY (publisher_id) REFERENCES publisher(id)
+                       FOREIGN KEY (publisher_id) REFERENCES publishers(id)
 );
 
 

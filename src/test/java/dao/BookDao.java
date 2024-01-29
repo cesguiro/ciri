@@ -1,13 +1,10 @@
 package dao;
 
 import entity.BookEntity;
-import es.cesguiro.dao.impl.CiriDaoImpl;
+import es.cesguiro.dao.impl.CiriDao;
+import es.cesguiro.entity.CiriEntityFactory;
 import factory.BookFactory;
 
-public class BookDao extends CiriDaoImpl<BookEntity, String> {
-
-    public BookDao(BookFactory bookFactory) {
-        super(bookFactory);
-    }
+public class BookDao extends CiriDao<BookEntity, String> {
 
 }

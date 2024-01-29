@@ -18,12 +18,10 @@ public class BookEntity extends CiriEntity {
     private CiriField cover = new CiriField("cover");
 
     public BookEntity() {
-        super("books");
         this.setPrimaryKey(isbn);
     }
 
     public BookEntity(String isbn, String title, String synopsis, BigDecimal price, String cover) {
-        super("books");
         this.isbn = new CiriField("isbn", isbn);
         this.title = new CiriField("title", title);
         this.synopsis = new CiriField("synopsis", synopsis);

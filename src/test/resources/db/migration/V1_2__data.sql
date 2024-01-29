@@ -1,5 +1,5 @@
 -- Editoriales
-INSERT INTO publisher (name) VALUES
+INSERT INTO publishers (name) VALUES
                                  ('Editorial Anagrama'),
                                  ('Penguin Random House Grupo Editorial España'),
                                  ('Editorial Planeta, S. A.'),

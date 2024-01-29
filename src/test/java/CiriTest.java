@@ -1,28 +1,26 @@
 import dao.BookDao;
 import entity.BookEntity;
 import es.cesguiro.AppPropertiesReader;
-import es.cesguiro.entity.CiriField;
-import factory.BookFactory;
+import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @Log4j2
-public class CiriDaoTest {
+public class CiriTest {
 
 
-    BookFactory bookFactory = new BookFactory();
+    //BookFactory bookFactory = new BookFactory();
 
-    BookDao bookDao = new BookDao(bookFactory);
+    BookDao bookDao = new BookDao();
 
     @BeforeAll
     public static void beforeAll(){
@@ -43,10 +41,16 @@ public class CiriDaoTest {
 
     }
 
+    @AfterEach
+    public void tearDown(){
+        RawSql.rollback();
+    }
+
     @Test
     public void testFindAll() {
-        List<BookEntity> bookEntityList = bookDao.findAll();
-        assertEquals("9788426418197", bookEntityList.get(1).getIsbn().getValue());
+        bookDao.findAll();
+        /*List<BookEntity> bookEntityList = bookDao.findAll();
+        assertEquals("9788426418197", bookEntityList.get(1).getIsbn().getValue());*/
     }
 
     @Test

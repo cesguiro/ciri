@@ -74,12 +74,39 @@ public class DB {
         }
     }
 
-    public DB orderBy() {
-        return null;
+    public DB orderBy(String field, String direction) {
+        if (field != null && !field.isEmpty()) {
+            this.sql.append(" ORDER BY ").append(field);
+            if (direction != null && !direction.isEmpty()) {
+                this.sql.append(" ").append(direction);
+            }
+        }
+        return this;
     }
 
-    public DB join() {
-        return null;
+    public DB join(String referencedTable, String primaryKey, String foreignKey) {
+        this.sql
+                .append(" INNER JOIN ")
+                .append(referencedTable)
+                .append(" ON ")
+                .append(referencedTable)
+                .append(".")
+                .append(primaryKey)
+                .append("=")
+                .append(this.tableName)
+                .append(".")
+                .append(foreignKey);
+        return this;
+    }
+
+    public DB limit(int limit, Integer offset) {
+        this.sql.append(" LIMIT ?");
+        this.parameters.add(limit);
+        if (offset != null) {
+            this.sql.append(",?");
+            this.parameters.add(offset);
+        }
+        return this;
     }
 
     public int insert(Map<String, Object> values) {
@@ -102,7 +129,7 @@ public class DB {
     }
 
     public int update(Map<String, Object> values) {
-        /*StringBuilder sql = new StringBuilder("UPDATE ").append(tableName).append(" SET ");
+        StringBuilder sql = new StringBuilder("UPDATE ").append(tableName).append(" SET ");
         List<Object> parameters = new ArrayList<>();
 
         for (Map.Entry<String, Object> entry : values.entrySet()) {
@@ -112,13 +139,13 @@ public class DB {
 
         sql.deleteCharAt(sql.length() - 1);
 
-        if (whereClause != null && !whereClause.isEmpty()) {
+        if(this.sql.toString().contains("WHERE")) {
+            String[] parts = this.sql.toString().split("WHERE", 2);
+            String whereClause = parts[1].trim();
             sql.append(" WHERE ").append(whereClause);
-            parameters.addAll(whereParams);
+            parameters.addAll(this.parameters);
         }
-
-        return RawSql.statement(sql.toString(), parameters);*/
-        return 0;
+        return RawSql.statement(sql.toString(), parameters);
     }
 
     public int delete() {

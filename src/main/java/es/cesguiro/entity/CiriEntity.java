@@ -8,13 +8,7 @@ import lombok.ToString;
 @ToString
 public class CiriEntity {
 
-    private final String tableName;
-
     @Setter
     private CiriField primaryKey;
-
-    public CiriEntity(String tableName) {
-        this.tableName = tableName;
-    }
 
 }

@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -166,8 +169,185 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testDete() {
-        int rowsAfected = DB.table("books").where("isbn", "=", "9788496173729").delete();
+    public void testDelete() {
+        int rowsAfected = DB.table("books")
+                .where("isbn", "=", "9788496173729")
+                .delete();
+        try(ResultSet resultSet = DB.table("books").find("9788496173729")) {
+            assertAll(
+                    () -> {
+                        assertAll(
+                                () -> assertEquals(1, rowsAfected),
+                                () -> assertEquals(null, resultSet)
+                        );
+                    }
+            );
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        assertEquals(1, rowsAfected);
     }
+
+    @Test
+    public void testUpdate() {
+        String title = "Título cambiado";
+        float price = 23.40f;
+        Map<String, Object> parameters= Map.of(
+                "title", title,
+                "price", price
+        );
+        int rowsAfected = DB.table("books")
+                .where("isbn", "=", "9788496173729")
+                .update(parameters);
+        try(ResultSet resultSet = DB.table("books").find("9788496173729")) {
+            assertAll(
+                    () -> {
+                        assertAll(
+                                () -> assertEquals(1, rowsAfected),
+                                () -> assertEquals(title, resultSet.getString("title")),
+                                () -> assertEquals(price, resultSet.getFloat("price"))
+                        );
+                    }
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testInsert() {
+        String isbn = "1111111111111";
+        String title = "Título nuevo";
+        String synopsis = "Sinonpsis nueva";
+        int publisher_id = 2;
+        float price = 23.40f;
+        String cover = "imagenNueva.jpeg";
+        Map<String, Object> parameters= Map.of(
+                "isbn", isbn,
+                "title", title,
+                "synopsis", synopsis,
+                "publisher_id", publisher_id,
+                "price", price,
+                "cover", cover
+        );
+        int rowsAfected = DB.table("books")
+                .insert(parameters);
+        try(ResultSet resultSet = DB.table("books").find(isbn)) {
+            assertAll(
+                    () -> {
+                        assertAll(
+                                () -> assertEquals(1, rowsAfected),
+                                () -> assertEquals(title, resultSet.getString("title")),
+                                () -> assertEquals(synopsis, resultSet.getString("synopsis")),
+                                () -> assertEquals(publisher_id, resultSet.getInt("publisher_id")),
+                                () -> assertEquals(price, resultSet.getFloat("price")),
+                                () -> assertEquals(cover, resultSet.getString("cover"))
+                        );
+                    }
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testSelectAllOrderByTitleAsc() {
+        try(ResultSet resultSet = DB.table("books").orderBy("title", "ASC").get()) {
+            if(resultSet.next()) {
+                assertEquals("9788415729204", resultSet.getString("isbn"));
+            }
+            else {
+                log.warn("No hay resultados en la tabla books");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testSelectAllOrderByTitleDesc() {
+        try(ResultSet resultSet = DB.table("books").orderBy("title", "DESC").get()) {
+            if(resultSet.next()) {
+                assertEquals("9788496173101", resultSet.getString("isbn"));
+            }
+            else {
+                log.warn("No hay resultados en la tabla books");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testSelectWithLimit() {
+        int limit = 3;
+        List<Object> rows = new ArrayList<>();
+        try(ResultSet resultSet = DB.table("books").limit(limit, null).get()) {
+            while (resultSet.next()) {
+                rows.add(resultSet.getString("isbn"));
+            }
+            assertAll(
+                    () -> {
+                        assertAll(
+                                () -> assertEquals(limit, rows.size()),
+                                () -> assertEquals("9788433920423", rows.get(0)),
+                                () -> assertEquals("9788426418197", rows.get(1)),
+                                () -> assertEquals("9786074213485", rows.get(2))
+                        );
+                    }
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testSelectWithLimitAndOffset() {
+        int limit = 3;
+        int offset = 4;
+        List<Object> rows = new ArrayList<>();
+        try(ResultSet resultSet = DB.table("books").limit(limit, offset).get()) {
+            while (resultSet.next()) {
+                rows.add(resultSet.getString("isbn"));
+            }
+            assertAll(
+                    () -> {
+                        assertAll(
+                                () -> assertEquals(offset, rows.size()),
+                                () -> assertEquals("9788466338141", rows.get(0)),
+                                () -> assertEquals("9788448022440", rows.get(1)),
+                                () -> assertEquals("9788499085944", rows.get(2)),
+                                () -> assertEquals("9788499086460", rows.get(3))
+                        );
+                    }
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testBooksJoinPublishers() {
+        try(ResultSet resultSet = DB.table("books")
+                .join("publishers", "id", "publisher_id")
+                .select("books.*", "publishers.name").get()) {
+            if(resultSet.next()) {
+                assertAll(
+                        () -> {
+                            assertAll(
+                                    () -> assertEquals("9788433920423", resultSet.getString("books.isbn")),
+                                    () -> assertEquals("Editorial Anagrama", resultSet.getString("publishers.name"))
+                            );
+                        }
+                );
+            } else {
+                log.warn("No hay resultados en la tabla books");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
