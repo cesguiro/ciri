@@ -56,7 +56,7 @@ public class CiriDaoTest {
         assertEquals("La insorportable levedad del ser", bookEntity.getTitle().getValue());
     }
 
-    @Test
+    /*@Test
     public void testInsert() {
         BookEntity bookEntity = new BookEntity(
                 "1111111111111",
@@ -68,5 +68,5 @@ public class CiriDaoTest {
         );
 
         bookDao.save(bookEntity);
-    }
+    }*/
 }

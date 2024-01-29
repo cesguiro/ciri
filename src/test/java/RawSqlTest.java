@@ -1,4 +1,3 @@
-import entity.BookEntity;
 import es.cesguiro.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
@@ -39,6 +38,7 @@ public class RawSqlTest {
     @AfterEach
     public void tearDown(){
         RawSql.rollback();
+        System.out.println("Rollback realizado");
     }
 
     @Test
@@ -76,7 +76,7 @@ public class RawSqlTest {
     @Order(3)
     public void testInsert() {
         String sql = """
-            INSERT INTO books (isbn, title, synopsis, id_publisher, price, cover)  
+            INSERT INTO books (isbn, title, synopsis, publisher_id, price, cover)  
             VALUES (?,?,?,?,?,?)
         """;
         RawSql.statement(sql, List.of("1111111111111", "prueba título", "prueba sinopsis", 1, new BigDecimal(23.45), "imagen.jpeg"));

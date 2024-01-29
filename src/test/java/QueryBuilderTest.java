@@ -168,7 +168,6 @@ public class QueryBuilderTest {
     @Test
     public void testDete() {
         int rowsAfected = DB.table("books").where("isbn", "=", "9788496173729").delete();
-
     }
 
 }
