@@ -12,31 +12,27 @@ import java.lang.annotation.Annotation;
 public abstract class CiriEntity {
 
     public String getTableName() {
-        // Obtén todas las anotaciones de la clase
-        Annotation[] annotations = getClass().getAnnotations();
-
-        // Busca la anotación @TableName y devuelve su valor si está presente
-        for (Annotation annotation : annotations) {
-            if (annotation instanceof TableName) {
-                return ((TableName) annotation).value();
-            }
-        }
-        // La entidad no tiene la anotación @TableName
-        throw new RuntimeException("No existe la anotación @TableName en la entidad");
+       return getAnnotationValue(TableName.class);
     }
 
     public String getPrimaryKey() {
-        // Obtén todas las anotaciones de la clase
-        Annotation[] annotations = getClass().getAnnotations();
+        return getAnnotationValue(Id.class);
+    }
 
-        // Busca la anotación @id y devuelve su valor si está presente
-        for (Annotation annotation : annotations) {
-            if (annotation instanceof Id) {
-                return ((Id) annotation).value();
+    public String getAnnotationValue(Class<? extends Annotation> annotationType) {
+        Annotation[] annotationList = getClass().getAnnotations();
+
+        for (Annotation annotation : annotationList) {
+            if (annotationType.isInstance(annotation)) {
+                try {
+                    return (String) annotationType.getMethod("value").invoke(annotation);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error al obtener el valor de la anotación", e);
+                }
             }
         }
-        // La entidad no tiene la anotación @TableName
-        throw new RuntimeException("No existe la anotación @Id en la entidad");
+
+        throw new RuntimeException("No existe la anotación " + annotationType.getSimpleName() + " en la entidad");
     }
 
 }

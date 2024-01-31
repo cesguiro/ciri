@@ -28,15 +28,18 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
 
     @Override
     public Optional<T> findById(PK id) {
-        ResultSet resultSet= DB.table(this.getTableNameFromEntity()).find(id);
+        //no utilizamos DB.table().find() para poder cambiar de PK
+        ResultSet resultSet= DB
+                .table(this.getTableNameFromEntity())
+                .where(this.getPrimaryKeyFromEntity(), "=", id)
+                .get();
         return Optional.ofNullable(toEntity(resultSet));
     }
 
     @Override
     public T save(T entity) {
-        entity.getPrimaryKey()
-        DB.table(this.getTableNameFromEntity()).find();
-        if(this.findById(this.getPrimaryKeyFromEntity()))
+
+        DB.table(this.getTableNameFromEntity()).insert();
     }
 
     @Override
