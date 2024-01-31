@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,20 +49,17 @@ public class CiriDaoTest {
 
     @Test
     public void testFindAll() {
-        List<BookEntity> bookList = bookCiriDao.findAll();
-
-        /*List<BookEntity> bookEntityList = bookDao.findAll();
-        assertEquals("9788426418197", bookEntityList.get(1).getIsbn().getValue());*/
+        List<BookEntity> bookEntityList = bookCiriDao.findAll();
+        assertEquals("9788426418197", bookEntityList.get(1).getIsbn());
     }
 
     @Test
     public  void testFindById() {
         BookEntity bookEntity = bookCiriDao.findById("9786074213485");
-
-        assertEquals("La insorportable levedad del ser", bookEntity.getTitle().getValue());
+        assertEquals("La insorportable levedad del ser", bookEntity.getTitle());
     }
 
-    /*@Test
+    @Test
     public void testInsert() {
         BookEntity bookEntity = new BookEntity(
                 "1111111111111",
@@ -71,7 +69,6 @@ public class CiriDaoTest {
                 "image.jpeg"
 
         );
-
-        bookDao.save(bookEntity);
-    }*/
+        bookCiriDao.save(bookEntity);
+    }
 }

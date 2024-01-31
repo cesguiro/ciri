@@ -8,6 +8,7 @@ public class BookFactory implements CiriEntityFactory<BookEntity> {
 
     @Override
     public BookEntity createEntity() {
-        return new BookEntity();
+        //return new BookEntity();
+        return null;
     }
 }
