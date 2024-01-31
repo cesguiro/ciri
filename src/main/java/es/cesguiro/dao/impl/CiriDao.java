@@ -38,8 +38,8 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
 
     @Override
     public T save(T entity) {
-
-        DB.table(this.getTableNameFromEntity()).insert();
+        return null;
+        //DB.table(this.getTableNameFromEntity()).insert();
     }
 
     @Override

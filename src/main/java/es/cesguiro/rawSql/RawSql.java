@@ -8,6 +8,8 @@ public class RawSql {
     private static final DBConnection dbConnection = new DBConnection();
     public static ResultSet select(String sql, List<Object> params) {
         try {
+            System.out.println(sql);
+            System.out.println(params);
             PreparedStatement preparedStatement = setParameters(sql, params);
             return preparedStatement.executeQuery();
         } catch (Exception e) {

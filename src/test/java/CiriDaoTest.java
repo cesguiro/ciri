@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,8 +56,8 @@ public class CiriDaoTest {
 
     @Test
     public  void testFindById() {
-        BookEntity bookEntity = bookCiriDao.findById("9786074213485");
-        assertEquals("La insorportable levedad del ser", bookEntity.getTitle());
+        Optional<BookEntity> bookEntity = bookCiriDao.findById("9786074213485");
+        assertEquals("La insorportable levedad del ser", bookEntity.get().getTitle());
     }
 
     @Test

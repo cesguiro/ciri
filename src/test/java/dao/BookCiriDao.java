@@ -20,14 +20,13 @@ public class BookCiriDao extends CiriDao<BookEntity, String> {
             return null;
         }
         try {
-            BookEntity bookEntity = new BookEntity(
+            return new BookEntity(
                     resultSet.getString("isbn"),
                     resultSet.getString("title"),
                     resultSet.getString("synopsis"),
                     resultSet.getBigDecimal("price"),
                     resultSet.getString("cover")
             );
-            return bookEntity;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
