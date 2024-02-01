@@ -1,4 +1,5 @@
 import dao.BookCiriDao;
+import entity.OrderEntity;
 import es.cesguiro.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import entity.BookEntity;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import java.math.BigDecimal;
@@ -82,16 +84,29 @@ public class CiriDaoTest {
     }
 
     @Test
-    public void testGetDataBaseFieldListFromEntity() {
+    public void testGetJavaToDBColumnMappingFromBookEntity() {
         BookEntity bookEntity = new BookEntity();
 
-        List<String> expected = List.of(
-                "isbn",
-                "title",
-                "synopsis",
-                "price",
-                "cover"
+        Map<String, String> expected = Map.of(
+                "isbn", "isbn",
+                "title", "title",
+                "synopsis", "synopsis",
+                "price", "price",
+                "cover", "cover"
         );
-        assertEquals(expected, bookEntity.getDatabaseFieldList());
+        assertEquals(expected, bookEntity.getJavaToDBColumnMapping());
+    }
+
+
+    @Test
+    public void testGetJavaToDBColumnMappingFromOrderEntity() {
+        OrderEntity orderEntity = new OrderEntity();
+
+        Map<String, String> expected = Map.of(
+                "id", "id",
+                "orderDate", "order_date",
+                "status", "status"
+        );
+        assertEquals(expected, orderEntity.getJavaToDBColumnMapping());
     }
 }

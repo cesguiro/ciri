@@ -12,18 +12,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor //Importante para que funcione el método getEntityClass de los Dao
 @TableName("books")
-@Id("isbn")
 public class BookEntity extends CiriEntity {
 
-    @Column("isbn")
+    @Id
     private String isbn;
-    @Column("title")
     private String title;
-    @Column("synopsis")
     private String synopsis;
-    @Column("price")
     private BigDecimal price;
-    @Column("cover")
     private String cover;
 
     /*private String isbn;

@@ -74,7 +74,6 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
     protected T toEntity2(ResultSet resultSet) {
         try {
             T entity = this.getEntityClass().getDeclaredConstructor().newInstance();
-            System.out.println(entity.getDatabaseFieldList());
             return null;
         } catch (Exception e) {
             throw new RuntimeException("No se ha podido crear la entidad", e);
