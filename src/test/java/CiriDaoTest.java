@@ -1,5 +1,4 @@
 import dao.BookCiriDao;
-import entity.BookEntity;
 import es.cesguiro.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
@@ -8,12 +7,14 @@ import org.flywaydb.core.api.MigrationInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
+import entity.BookEntity;
 import java.util.List;
 import java.util.Optional;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @Log4j2
@@ -61,6 +62,13 @@ public class CiriDaoTest {
     }
 
     @Test
+    public  void testFindByNonExistingIdShouldReturnOptionalEmpty() {
+        Optional<BookEntity> bookEntity = bookCiriDao.findById("1111111111111");
+        assertFalse(bookEntity.isPresent(), "Se esperaba Optional.empty()");
+    }
+
+
+    @Test
     public void testInsert() {
         BookEntity bookEntity = new BookEntity(
                 "1111111111111",
@@ -71,5 +79,19 @@ public class CiriDaoTest {
 
         );
         bookCiriDao.save(bookEntity);
+    }
+
+    @Test
+    public void testGetDataBaseFieldListFromEntity() {
+        BookEntity bookEntity = new BookEntity();
+
+        List<String> expected = List.of(
+                "isbn",
+                "title",
+                "synopsis",
+                "price",
+                "cover"
+        );
+        assertEquals(expected, bookEntity.getDatabaseFieldList());
     }
 }
