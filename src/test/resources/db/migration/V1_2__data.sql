@@ -48,3 +48,27 @@ VALUES
     (8, 6),
     (9, 7),
     (10, 7);
+
+-- Insertar usuarios con sus direcciones de entrega
+INSERT INTO delivery_address (address, city, province, postal_code)
+VALUES
+    ('Calle Gran Vía 123', 'Valencia', 'Valencia', 46001),
+    ('Calle Rambla 456', 'Alicante', 'Alicante', 03001),
+    ('Calle Triana 789', 'Málaga', 'Málaga', 29001),
+    ('Calle Alhambra 012', 'Zaragoza', 'Zaragoza', 50001);
+
+INSERT INTO users (username, email, password, admin, delivery_address_id)
+VALUES
+    ('Usuario1', 'usuario1@example.com', 'password1', 0, 1), -- Asociado a la dirección en Valencia
+    ('Usuario2', 'usuario2@example.com', 'password2', 0, 2), -- Asociado a la dirección en Alicante
+    ('Usuario3', 'usuario3@example.com', 'password3', 1, 3), -- Asociado a la dirección en Málaga
+    ('Usuario4', 'usuario4@example.com', 'password4', 0, 4); -- Asociado a la dirección en Zaragoza
+
+INSERT INTO orders(order_date, user_id, status)
+VALUES
+    ('2022-01-15', 1, 0),
+    ('2022-02-20', 2, 0),
+    ('2022-03-10', 3, 1),
+    ('2022-04-05', 4, 0);
+
+

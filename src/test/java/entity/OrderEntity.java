@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 public class OrderEntity extends CiriEntity {
 
     @Id
-    private String id;
+    private int id;
     @Column("order_date")
-    private String orderDate;
-    private String status;
+    private Date orderDate;
+    private int status;
 }

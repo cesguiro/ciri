@@ -3,6 +3,7 @@ package es.cesguiro.dao.entity;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import es.cesguiro.annotations.Column;
 import es.cesguiro.annotations.Id;
+import es.cesguiro.annotations.TableName;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -17,19 +18,13 @@ import java.util.Map;
 @ToString
 public abstract class CiriEntity {
 
-    public String getAnnotationValue(Class<? extends Annotation> annotationType) {
-        Annotation[] annotationList = getClass().getAnnotations();
 
-        for (Annotation annotation : annotationList) {
-            if (annotationType.isInstance(annotation)) {
-                try {
-                    return (String) annotationType.getMethod("value").invoke(annotation);
-                } catch (Exception e) {
-                    throw new RuntimeException("Error al obtener el valor de la anotación", e);
-                }
-            }
+    public String getTableName() {
+        TableName tableNameAnnotation = getClass().getAnnotation(TableName.class);
+        if(tableNameAnnotation != null) {
+            return tableNameAnnotation.value();
         }
-        throw new RuntimeException("No existe la anotación " + annotationType.getSimpleName() + " en la entidad");
+        throw new RuntimeException("No existe la anotación " + TableName.class.getSimpleName() + " en la entidad");
     }
 
     private String getDBFieldName(Field field) {
@@ -61,14 +56,6 @@ public abstract class CiriEntity {
             fieldMap.put(attributeName, dbFieldName);
         }
         return fieldMap;
-    }
-
-    public String getAttributeList(){
-        return null;
-    }
-
-    public String getAttributeListValues() {
-        return null;
     }
 
 }

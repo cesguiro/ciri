@@ -1,4 +1,5 @@
 import dao.BookCiriDao;
+import dao.OrderCiriDao;
 import entity.OrderEntity;
 import es.cesguiro.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import entity.BookEntity;
+
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class CiriDaoTest {
     //BookFactory bookFactory = new BookFactory();
 
     BookCiriDao bookCiriDao = new BookCiriDao();
+    OrderCiriDao orderCiriDao = new OrderCiriDao();
 
     @BeforeAll
     public static void beforeAll(){
@@ -58,9 +62,20 @@ public class CiriDaoTest {
     }
 
     @Test
-    public  void testFindById() {
+    public  void testFindBookById() {
         Optional<BookEntity> bookEntity = bookCiriDao.findById("9786074213485");
         assertEquals("La insorportable levedad del ser", bookEntity.get().getTitle());
+    }
+
+    @Test
+    public  void testFindPublisherById() {
+        Optional<OrderEntity> orderEntity = orderCiriDao.findById(1);
+
+        // Convertir java.sql.Date a un String formateado
+        java.sql.Date orderDateFromEntity = orderEntity.get().getOrderDate();
+        String formattedOrderDate = new SimpleDateFormat("yyyy-MM-dd").format(orderDateFromEntity);
+
+        assertEquals("2022-01-15", formattedOrderDate);
     }
 
     @Test

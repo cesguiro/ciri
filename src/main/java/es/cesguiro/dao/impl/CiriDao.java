@@ -15,17 +15,26 @@ import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
 
 
+    //Instancia de la entidad para acceder a sus anotaciones, campos....
+    private final T entityHelper;
+
+    protected CiriDao() {
+        try {
+            entityHelper =  getEntityClass().getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("No se ha podido crear una instancia de la entidad", e);
+        }
+    }
+
     @Override
     public List<T> findAll() {
         ResultSet resultSet = DB
-                .table(this.getAnnotationValueFromEntity(TableName.class))
+                .table(entityHelper.getTableName())
                 .get();
         return toEntityList(resultSet);
     }
@@ -33,13 +42,15 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
     @Override
     public Optional<T> findById(PK id) {
         //no utilizamos DB.table().find() para poder cambiar de PK
-        ResultSet resultSet= DB
-                .table(this.getAnnotationValueFromEntity(TableName.class))
-                .where(this.getAnnotationValueFromEntity(Id.class), "=", id)
-                .get();
+        String idDbFieldName;
         try {
+            idDbFieldName = entityHelper.getIdDBFieldName();
+            ResultSet resultSet= DB
+                    .table(entityHelper.getTableName())
+                    .where(idDbFieldName, "=", id)
+                    .get();
             if(resultSet.next()) {
-                return Optional.of(toEntity(resultSet));
+                return Optional.of(toEntity2(resultSet));
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -48,23 +59,29 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
     }
 
     @Override
-    public T save(T entity) {
-        return null;
-        //DB.table(this.getTableNameFromEntity()).insert();
+    public int save(T entity) {
+        Map<String, String> javaToDBColumnMapping = entityHelper.getJavaToDBColumnMapping();
+        Map<String, Object> parameters = new HashMap<>();
+        for (String entityFieldName : javaToDBColumnMapping.keySet()) {
+            String dbColumnName = javaToDBColumnMapping.get(entityFieldName);
+            try {
+                // Obtener el valor del campo de la entidad usando reflexión
+                Field field = entity.getClass().getDeclaredField(entityFieldName);
+                field.setAccessible(true);
+                Object value = field.get(entity);
+
+                // Agregar el par (nombre de columna, valor) al mapa de parámetros
+                parameters.put(dbColumnName, value);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al obtener el valor del campo " + entityFieldName, e);
+            }
+        }
+        return DB.table(entityHelper.getTableName()).insert(parameters);
     }
 
     @Override
     public int delete(T entity) {
         return 0;
-    }
-
-    private String getAnnotationValueFromEntity(Class<? extends Annotation> annotationType) {
-        try {
-            T entity = getEntityClass().getDeclaredConstructor().newInstance();
-            return entity.getAnnotationValue(annotationType);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected abstract Class<T> getEntityClass();
@@ -73,10 +90,18 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
 
     protected T toEntity2(ResultSet resultSet) {
         try {
-            T entity = this.getEntityClass().getDeclaredConstructor().newInstance();
-            return null;
+            T entity = this.getEntityInstance();
+            Map<String, String> javaToDBColumnMapping = entity.getJavaToDBColumnMapping();
+            for (String key : javaToDBColumnMapping.keySet()) {
+                String dbFieldName = javaToDBColumnMapping.get(key);
+                Field field = entity.getClass().getDeclaredField(key);
+                field.setAccessible(true);
+                Object value = resultSet.getObject(dbFieldName);
+                field.set(entity, value);
+            }
+            return entity;
         } catch (Exception e) {
-            throw new RuntimeException("No se ha podido crear la entidad", e);
+            throw new RuntimeException("No se ha podido mapear desde resultSet a Entity", e);
         }
     }
 
@@ -94,5 +119,12 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
         }
     }
 
+    private T getEntityInstance() {
+        try {
+            return getEntityClass().getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("No se ha podido crear una instancia de la entidad", e);
+        }
+    }
 
 }
