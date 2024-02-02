@@ -231,13 +231,13 @@ public class QueryBuilderTest {
                 "price", price,
                 "cover", cover
         );
-        int rowsAfected = DB.table("books")
+        int lastId = (int) DB.table("books")
                 .insert(parameters);
         try(ResultSet resultSet = DB.table("books").find(isbn)) {
             assertAll(
                     () -> {
                         assertAll(
-                                () -> assertEquals(1, rowsAfected),
+                                () -> assertEquals(13, lastId),
                                 () -> assertEquals(title, resultSet.getString("title")),
                                 () -> assertEquals(synopsis, resultSet.getString("synopsis")),
                                 () -> assertEquals(publisher_id, resultSet.getInt("publisher_id")),

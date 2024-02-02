@@ -59,7 +59,7 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
     }
 
     @Override
-    public int save(T entity) {
+    public T save(T entity) {
         Map<String, String> javaToDBColumnMapping = entityHelper.getJavaToDBColumnMapping();
         Map<String, Object> parameters = new HashMap<>();
         for (String entityFieldName : javaToDBColumnMapping.keySet()) {
@@ -76,7 +76,8 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
                 throw new RuntimeException("Error al obtener el valor del campo " + entityFieldName, e);
             }
         }
-        return DB.table(entityHelper.getTableName()).insert(parameters);
+        //return DB.table(entityHelper.getTableName()).insert(parameters);
+        return null;
     }
 
     @Override

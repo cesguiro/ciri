@@ -72,3 +72,9 @@ VALUES
     ('2022-04-05', 4, 0);
 
 
+INSERT INTO  booksWithoutId(isbn, title)
+VALUES
+    ('9788433920423', 'La conjura de los necios'),
+    ('9788426418197', 'El nombre de la rosa'),
+    ('9786074213485', 'La insorportable levedad del ser'),
+    ('9788466338141', 'La isla del día de antes')

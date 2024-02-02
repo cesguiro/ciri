@@ -10,8 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Log4j2
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -52,7 +52,7 @@ public class RawSqlTest {
                 log.warn("No hay resultados: " + sql);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            fail("Error executing SQL query: " + e.getMessage());
         }
     }
 
@@ -67,27 +67,51 @@ public class RawSqlTest {
                     fail("No se encuentra el libro");
                 }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+                fail("Error executing SQL query: " + e.getMessage());
         }
     }
 
     @Test
     @Order(3)
-    public void testInsert() {
+    public void testInsertWithoutId() {
+        String isbn = "1111111111111";
+        String title = "prueba título";
+        String synopsis = "prueba synopsis";
+        int publisher_id = 1;
+        float price = 23.45f;
+        String cover = "imagen.jpeg";
         String sql = """
             INSERT INTO books (isbn, title, synopsis, publisher_id, price, cover)  
             VALUES (?,?,?,?,?,?)
         """;
-        RawSql.statement(sql, List.of("1111111111111", "prueba título", "prueba sinopsis", 1, new BigDecimal(23.45), "imagen.jpeg"));
+        int lastId = (int) RawSql.insert(sql, List.of(
+                isbn,
+                title,
+                synopsis,
+                publisher_id,
+                price,
+                cover));
         sql = "SELECT * FROM books WHERE isbn = ?";
-        try (ResultSet resultSet = RawSql.select(sql, List.of("1111111111111"))){
+        try (ResultSet resultSet = RawSql.select(sql, List.of(isbn))){
             if(resultSet.next()) {
-                assertEquals("prueba título", resultSet.getString("title"));
+                assertAll(
+                        () -> {
+                            assertAll(
+                                    () -> assertEquals(13, lastId),
+                                    () -> assertEquals(title, resultSet.getString("title")),
+                                    () -> assertEquals(synopsis, resultSet.getString("synopsis")),
+                                    () -> assertEquals(publisher_id, resultSet.getInt("publisher_id")),
+                                    () -> assertEquals(price, resultSet.getFloat("price")),
+                                    () -> assertEquals(cover, resultSet.getString("cover"))
+                            );
+                        }
+                );
+
             } else {
                 fail("No se encuentra el libro");
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            fail("Error executing SQL query: " + e.getMessage());
         }
     }
 
@@ -100,8 +124,103 @@ public class RawSqlTest {
                 fail("No se ha realizado el rollback después del test");
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            fail("Error executing SQL query: " + e.getMessage());
         }
+    }
+
+    @Test
+    public void testInsertWithId() {
+        String isbn = "1111111111111";
+        String title = "prueba título";
+        String sql = """
+                INSERT INTO booksWithoutId (isbn, title)  
+                VALUES (?,?)
+            """;
+        Object lastId = RawSql.insert(sql, List.of(isbn, title));
+        sql = "SELECT * FROM booksWithoutId WHERE isbn = ?";
+            try (ResultSet resultSet = RawSql.select(sql, List.of(isbn))){
+            if(resultSet.next()) {
+                assertAll(
+                        () -> {
+                            assertAll(
+                                    () -> assertEquals(isbn, lastId),
+                                    () -> assertEquals(title, resultSet.getString("title"))
+                            );
+                        }
+                );
+            } else {
+                fail("No se encuentra el libro");
+            }
+        } catch (SQLException e) {
+                fail("Error executing SQL query: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateOneRecord() {
+        String isbn = "9788433920423";
+        String title = "título modificado";
+        String sql = """
+                UPDATE books set title = ? WHERE isbn = ?  
+            """;
+        int rowsAffected = RawSql.update(sql, List.of(title, isbn));
+        sql = "SELECT * FROM books WHERE isbn = ?";
+        try (ResultSet resultSet = RawSql.select(sql, List.of(isbn))){
+            if(resultSet.next()) {
+                assertAll(
+                        () -> {
+                            assertAll(
+                                    () -> assertEquals(1, rowsAffected),
+                                    () -> assertEquals(title, resultSet.getString("title"))
+                            );
+                        }
+                );
+            } else {
+                fail("No se encuentra el libro");
+            }
+        } catch (SQLException e) {
+            fail("Error executing SQL query: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUpdateMoreThanOneRecord() {
+        Integer publisherId = 2;
+        String title = "título modificado";
+        String sql = """
+                UPDATE books set title = ? WHERE publisher_id = ?  
+            """;
+        int rowsAffected = RawSql.update(sql, List.of(title, publisherId));
+        assertEquals(2, rowsAffected);
+    }
+
+
+    @Test
+    public void deleteOneRecord() {
+        int id = 1;
+        String sql = """
+                DELETE FROM authors WHERE id = ?  
+            """;
+        int rowsAffected = RawSql.update(sql, List.of(id));
+        sql = "SELECT * FROM authors WHERE id = ?";
+        try (ResultSet resultSet = RawSql.select(sql, List.of(id))){
+            assertAll(
+                    () -> assertEquals(1, rowsAffected),
+                    () -> assertFalse(resultSet.next())
+            );
+        } catch (SQLException e) {
+            fail("Error executing SQL query: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDeleteMoreThanOneRecord() {
+        Integer birthYear = 1948;
+        String sql = """
+                DELETE FROM authors WHERE birth_year = ?  
+            """;
+        int rowsAffected = RawSql.update(sql, List.of(birthYear));
+        assertEquals(2, rowsAffected);
     }
 
 }

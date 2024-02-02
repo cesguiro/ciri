@@ -11,7 +11,7 @@ CREATE TABLE books (
                        publisher_id INT,
                        price DECIMAL(10, 2) NOT NULL,
                        cover VARCHAR(255),
-                       FOREIGN KEY (publisher_id) REFERENCES publishers(id)
+                       FOREIGN KEY (publisher_id) REFERENCES publishers(id) ON DELETE SET NULL
 );
 
 
@@ -27,8 +27,8 @@ CREATE TABLE book_authors (
                               id INT PRIMARY KEY AUTO_INCREMENT,
                               book_id INT,
                               author_id INT,
-                              FOREIGN KEY (book_id) REFERENCES books(id),
-                              FOREIGN KEY (author_id) REFERENCES authors(id)
+                              FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+                              FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE
 );
 
 CREATE TABLE delivery_address (
@@ -65,4 +65,9 @@ CREATE TABLE order_details (
                                price DECIMAL(10, 2) NOT NULL,
                                FOREIGN KEY (order_id) REFERENCES orders(id),
                                FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+CREATE TABLE booksWithoutId (
+                       isbn VARCHAR(13) PRIMARY KEY NOT NULL,
+                       title VARCHAR(255) NOT NULL
 );

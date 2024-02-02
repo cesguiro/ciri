@@ -109,7 +109,7 @@ public class DB {
         return this;
     }
 
-    public int insert(Map<String, Object> values) {
+    public Object insert(Map<String, Object> values) {
         StringBuilder sql = new StringBuilder("INSERT INTO ").append(this.tableName).append(" (");
         StringBuilder placeholders = new StringBuilder(") VALUES (");
         List<Object> parameters = new ArrayList<>();
@@ -125,7 +125,7 @@ public class DB {
 
         sql.append(placeholders).append(")");
 
-        return RawSql.statement(sql.toString(), parameters);
+        return RawSql.insert(sql.toString(), parameters);
     }
 
     public int update(Map<String, Object> values) {
@@ -145,12 +145,12 @@ public class DB {
             sql.append(" WHERE ").append(whereClause);
             parameters.addAll(this.parameters);
         }
-        return RawSql.statement(sql.toString(), parameters);
+        return RawSql.update(sql.toString(), parameters);
     }
 
     public int delete() {
         this.sql.replace(this.sql.indexOf("SELECT * "), this.sql.indexOf("FROM"), ("DELETE "));
-        return RawSql.statement(sql.toString(), this.parameters);
+        return RawSql.delete(sql.toString(), this.parameters);
     }
 
     public ResultSet get() {
