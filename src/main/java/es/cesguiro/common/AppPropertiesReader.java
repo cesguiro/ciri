@@ -1,4 +1,4 @@
-package es.cesguiro;
+package es.cesguiro.common;
 
 
 import lombok.extern.log4j.Log4j2;

@@ -1,15 +1,10 @@
 package es.cesguiro.dao.mapper;
 
-import es.cesguiro.annotations.TableName;
+import es.cesguiro.common.annotations.TableName;
 import es.cesguiro.dao.entity.CiriEntity;
-import es.cesguiro.dao.entity.CiriEntityFactory;
-import es.cesguiro.dao.entity.CiriField;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
 
 public class CiriMapper{
 

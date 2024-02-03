@@ -1,19 +1,12 @@
 package es.cesguiro.dao.impl;
 
-import es.cesguiro.annotations.Id;
-import es.cesguiro.annotations.TableName;
 import es.cesguiro.dao.Ciri;
-import es.cesguiro.dao.mapper.CiriMapper;
 import es.cesguiro.db.DBUtil;
 import es.cesguiro.dao.entity.CiriEntity;
 import es.cesguiro.queryBuilder.DB;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 

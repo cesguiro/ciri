@@ -1,4 +1,4 @@
-import es.cesguiro.AppPropertiesReader;
+import es.cesguiro.common.AppPropertiesReader;
 import es.cesguiro.queryBuilder.DB;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;

@@ -1,9 +1,11 @@
-package entity;
+package ciriDao.v10.entity;
 
 import es.cesguiro.common.annotations.Id;
 import es.cesguiro.common.annotations.TableName;
 import es.cesguiro.dao.entity.CiriEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 

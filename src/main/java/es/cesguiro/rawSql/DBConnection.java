@@ -1,6 +1,6 @@
 package es.cesguiro.rawSql;
 
-import es.cesguiro.AppPropertiesReader;
+import es.cesguiro.common.AppPropertiesReader;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 

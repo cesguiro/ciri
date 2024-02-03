@@ -1,6 +1,9 @@
-import dao.BookCiriDao;
-import dao.OrderCiriDao;
-import entity.OrderEntity;
+package ciriDao.v10;
+
+import ciriDao.v10.dao.BookCiriDao;
+import ciriDao.v10.dao.OrderCiriDao;
+import ciriDao.v10.entity.BookEntity;
+import ciriDao.v10.entity.OrderEntity;
 import es.cesguiro.common.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
@@ -9,14 +12,12 @@ import org.flywaydb.core.api.MigrationInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import entity.BookEntity;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

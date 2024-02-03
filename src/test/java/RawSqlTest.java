@@ -1,11 +1,10 @@
-import es.cesguiro.AppPropertiesReader;
+import es.cesguiro.common.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 import org.junit.jupiter.api.*;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

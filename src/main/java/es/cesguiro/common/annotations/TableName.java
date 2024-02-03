@@ -1,4 +1,4 @@
-package es.cesguiro.annotations;
+package es.cesguiro.common.annotations;
 
 import java.lang.annotation.*;
 

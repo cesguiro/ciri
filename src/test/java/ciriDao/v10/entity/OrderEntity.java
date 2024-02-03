@@ -1,4 +1,4 @@
-package entity;
+package ciriDao.v10.entity;
 
 import es.cesguiro.common.annotations.Column;
 import es.cesguiro.common.annotations.Id;

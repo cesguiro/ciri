@@ -1,17 +1,13 @@
 package es.cesguiro.dao.entity;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import es.cesguiro.annotations.Column;
-import es.cesguiro.annotations.Id;
-import es.cesguiro.annotations.TableName;
+import es.cesguiro.common.annotations.Column;
+import es.cesguiro.common.annotations.Id;
+import es.cesguiro.common.annotations.TableName;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter
