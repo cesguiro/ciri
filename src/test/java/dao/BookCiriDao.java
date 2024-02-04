@@ -1,11 +1,10 @@
 package dao;
 
 import entity.BookEntity;
-import es.cesguiro.dao.impl.CiriDao;
+import es.cesguiro.dao.v40.impl.CiriDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class BookCiriDao extends CiriDao<BookEntity, String> {
 

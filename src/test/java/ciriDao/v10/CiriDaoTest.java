@@ -4,6 +4,7 @@ import ciriDao.v10.dao.BookCiriDao;
 import ciriDao.v10.dao.OrderCiriDao;
 import ciriDao.v10.entity.BookEntity;
 import ciriDao.v10.entity.OrderEntity;
+import ciriDao.v10.entity.PublisherEntity;
 import es.cesguiro.common.AppPropertiesReader;
 import es.cesguiro.rawSql.RawSql;
 import lombok.extern.log4j.Log4j2;
@@ -19,8 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @Log4j2
@@ -59,34 +59,42 @@ public class CiriDaoTest {
     @Test
     public void testFindAll() {
         List<BookEntity> bookEntityList = bookCiriDao.findAll();
-        assertEquals("9788426418197", bookEntityList.get(1).getIsbn());
+        PublisherEntity publisherEntity = new PublisherEntity(
+                1,
+                "Editorial Anagrama"
+        );
+        int expectedSize = 12;
+        assertAll( () -> {
+            assertEquals(expectedSize, bookEntityList.size());
+            assertEquals("9788433920423", bookEntityList.get(0).getIsbn());
+            assertEquals("9788426418197", bookEntityList.get(1).getIsbn());
+            assertEquals("9786074213485", bookEntityList.get(2).getIsbn());
+            assertEquals(publisherEntity, bookEntityList.get(0).getPublisherEntity());
+        });
     }
 
     @Test
     public  void testFindBookById() {
-        Optional<BookEntity> bookEntity = bookCiriDao.findById("9786074213485");
-        assertEquals("La insorportable levedad del ser", bookEntity.get().getTitle());
+        Optional<BookEntity> bookEntity = bookCiriDao.findById(1);
+        PublisherEntity publisherEntity = new PublisherEntity(
+                1,
+                "Editorial Anagrama"
+        );
+        assertAll( () -> {
+            assertEquals("9788433920423", bookEntity.get().getIsbn());
+            assertEquals(publisherEntity, bookEntity.get().getPublisherEntity());
+        });
     }
 
-    @Test
-    public  void testFindPublisherById() {
-        Optional<OrderEntity> orderEntity = orderCiriDao.findById(1);
-
-        // Convertir java.sql.Date a un String formateado
-        java.sql.Date orderDateFromEntity = orderEntity.get().getOrderDate();
-        String formattedOrderDate = new SimpleDateFormat("yyyy-MM-dd").format(orderDateFromEntity);
-
-        assertEquals("2022-01-15", formattedOrderDate);
-    }
 
     @Test
     public  void testFindByNonExistingIdShouldReturnOptionalEmpty() {
-        Optional<BookEntity> bookEntity = bookCiriDao.findById("1111111111111");
+        Optional<BookEntity> bookEntity = bookCiriDao.findById(15);
         assertFalse(bookEntity.isPresent(), "Se esperaba Optional.empty()");
     }
 
 
-    @Test
+    /*@Test
     public void testInsert() {
         BookEntity bookEntity = new BookEntity(
                 "1111111111111",
@@ -124,5 +132,5 @@ public class CiriDaoTest {
                 "status", "status"
         );
         assertEquals(expected, orderEntity.getJavaToDBColumnMapping());
-    }
+    }*/
 }

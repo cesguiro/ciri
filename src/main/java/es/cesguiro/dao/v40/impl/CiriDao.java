@@ -1,8 +1,7 @@
-package es.cesguiro.dao.impl;
+package es.cesguiro.dao.v40.impl;
 
-import es.cesguiro.dao.Ciri;
-import es.cesguiro.db.DBUtil;
-import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.v40.Ciri;
+import es.cesguiro.dao.v40.entity.CiriEntity;
 import es.cesguiro.queryBuilder.DB;
 
 import java.lang.reflect.Field;

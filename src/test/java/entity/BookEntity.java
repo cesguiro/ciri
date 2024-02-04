@@ -2,7 +2,7 @@ package entity;
 
 import es.cesguiro.common.annotations.Id;
 import es.cesguiro.common.annotations.TableName;
-import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.v40.entity.CiriEntity;
 import lombok.*;
 
 import java.math.BigDecimal;

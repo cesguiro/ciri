@@ -1,7 +1,7 @@
 package ciriDao.v10.dao;
 
 import ciriDao.v10.entity.OrderEntity;
-import es.cesguiro.dao.impl.CiriDao;
+import es.cesguiro.dao.v10.impl.CiriDao;
 
 import java.sql.ResultSet;
 

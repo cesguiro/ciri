@@ -1,4 +1,4 @@
-package es.cesguiro.dao.entity;
+package es.cesguiro.dao.v40.entity;
 
 import lombok.Getter;
 import lombok.Setter;

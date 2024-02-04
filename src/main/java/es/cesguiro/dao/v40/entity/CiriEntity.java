@@ -1,4 +1,4 @@
-package es.cesguiro.dao.entity;
+package es.cesguiro.dao.v40.entity;
 
 import es.cesguiro.common.annotations.Column;
 import es.cesguiro.common.annotations.Id;

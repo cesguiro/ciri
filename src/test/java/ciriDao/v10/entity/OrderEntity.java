@@ -3,12 +3,13 @@ package ciriDao.v10.entity;
 import es.cesguiro.common.annotations.Column;
 import es.cesguiro.common.annotations.Id;
 import es.cesguiro.common.annotations.TableName;
-import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.v10.entity.CiriEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +22,19 @@ public class OrderEntity extends CiriEntity {
     @Column("order_date")
     private Date orderDate;
     private int status;
+
+    @Override
+    public String getTableName() {
+        return null;
+    }
+
+    @Override
+    public String getIdDBFieldName() {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getJavaToDBColumnMapping() {
+        return null;
+    }
 }

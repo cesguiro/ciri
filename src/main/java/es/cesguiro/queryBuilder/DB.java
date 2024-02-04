@@ -61,7 +61,7 @@ public class DB {
     }
 
     public ResultSet find(Object id) {
-        this.sql.append(" WHERE isbn = ?");
+        this.sql.append(" WHERE id = ?");
         this.parameters.add(id);
         ResultSet resultSet = this.get();
         try {

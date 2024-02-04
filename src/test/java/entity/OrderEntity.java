@@ -3,7 +3,7 @@ package entity;
 import es.cesguiro.common.annotations.Column;
 import es.cesguiro.common.annotations.Id;
 import es.cesguiro.common.annotations.TableName;
-import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.v40.entity.CiriEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

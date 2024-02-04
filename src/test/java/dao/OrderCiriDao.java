@@ -1,7 +1,7 @@
 package dao;
 
 import entity.OrderEntity;
-import es.cesguiro.dao.impl.CiriDao;
+import es.cesguiro.dao.v40.impl.CiriDao;
 
 import java.sql.ResultSet;
 

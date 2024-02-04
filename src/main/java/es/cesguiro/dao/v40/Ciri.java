@@ -1,6 +1,6 @@
-package es.cesguiro.dao;
+package es.cesguiro.dao.v40;
 
-import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.v40.entity.CiriEntity;
 
 import java.util.List;
 import java.util.Optional;

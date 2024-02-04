@@ -1,7 +1,7 @@
-package es.cesguiro.dao.mapper;
+package es.cesguiro.dao.v40.mapper;
 
 import es.cesguiro.common.annotations.TableName;
-import es.cesguiro.dao.entity.CiriEntity;
+import es.cesguiro.dao.v40.entity.CiriEntity;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.ResultSet;
