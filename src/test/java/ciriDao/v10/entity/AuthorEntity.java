@@ -12,7 +12,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class AuthorEntity extends CiriEntity {
 
-    private int id;
+    private Integer id;
     private String name;
     private String nationality;
     private int birthYear;
@@ -26,6 +26,16 @@ public class AuthorEntity extends CiriEntity {
     @Override
     public String getIdDBFieldName() {
         return "id";
+    }
+
+    @Override
+    public Object getIdValue() {
+        return this.id;
+    }
+
+    @Override
+    public Map<String, String> getJavaToDBColumnMapping() {
+        return null;
     }
 
     /*@Override

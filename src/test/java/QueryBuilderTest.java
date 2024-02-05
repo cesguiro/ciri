@@ -80,7 +80,7 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testSelectAllWithWhereClausule() {
+    public void testSelectAllWithWhereClause() {
         try(ResultSet resultSet = DB
                 .table("books")
                 .where("title", "=", "'El nombre de la rosa'")
@@ -97,7 +97,7 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testSelectWithWhereClausulePrice() {
+    public void testSelectWithWhereClausePrice() {
         try(ResultSet resultSet = DB
                 .table("books")
                 .where("price", "<", "10.0")
@@ -114,7 +114,7 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testSelectWithAndWhereClausule() {
+    public void testSelectWithAndWhereClause() {
         try(ResultSet resultSet = DB
                 .table("books")
                 .where("price", "<", "10.0")
@@ -132,7 +132,7 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testSelectWithOrWhereClausule() {
+    public void testSelectWithOrWhereClause() {
         try(ResultSet resultSet = DB
                 .table("books")
                 .where("price", "<", "10.0")
@@ -162,7 +162,7 @@ public class QueryBuilderTest {
     @Test
     public void testFindByNonExistingIsbn(){
         try(ResultSet resultSet = DB.table("books").find("25")) {
-            assertEquals(null, resultSet);
+            assertNull(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -170,15 +170,15 @@ public class QueryBuilderTest {
 
     @Test
     public void testDelete() {
-        int rowsAfected = DB.table("books")
+        int rowsAffected = DB.table("books")
                 .where("isbn", "=", "9788496173729")
                 .delete();
         try(ResultSet resultSet = DB.table("books").find("9788496173729")) {
             assertAll(
                     () -> {
                         assertAll(
-                                () -> assertEquals(1, rowsAfected),
-                                () -> assertEquals(null, resultSet)
+                                () -> assertEquals(1, rowsAffected),
+                                () -> assertNull(resultSet)
                         );
                     }
             );
@@ -186,7 +186,7 @@ public class QueryBuilderTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        assertEquals(1, rowsAfected);
+        assertEquals(1, rowsAffected);
     }
 
     @Test
@@ -197,14 +197,14 @@ public class QueryBuilderTest {
                 "title", title,
                 "price", price
         );
-        int rowsAfected = DB.table("books")
+        int rowsAffected = DB.table("books")
                 .where("isbn", "=", "9788496173729")
                 .update(parameters);
         try(ResultSet resultSet = DB.table("books").find(11)) {
             assertAll(
                     () -> {
                         assertAll(
-                                () -> assertEquals(1, rowsAfected),
+                                () -> assertEquals(1, rowsAffected),
                                 () -> assertEquals(title, resultSet.getString("title")),
                                 () -> assertEquals(price, resultSet.getFloat("price"))
                         );
@@ -350,6 +350,5 @@ public class QueryBuilderTest {
             throw new RuntimeException(e);
         }
     }
-
 
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class PublisherEntity extends CiriEntity {
 
-    private int id;
+    private Integer id;
     private String name;
     private List<BookEntity> bookEntityList;
 
@@ -34,6 +34,16 @@ public class PublisherEntity extends CiriEntity {
     @Override
     public String getIdDBFieldName() {
         return "id";
+    }
+
+    @Override
+    public Object getIdValue() {
+        return this.id;
+    }
+
+    @Override
+    public Map<String, String> getJavaToDBColumnMapping() {
+        return null;
     }
 
     public List<BookEntity> getBookEntityList() {
