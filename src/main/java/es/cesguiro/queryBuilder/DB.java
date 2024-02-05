@@ -89,12 +89,8 @@ public class DB {
                 .append(" INNER JOIN ")
                 .append(referencedTable)
                 .append(" ON ")
-                .append(referencedTable)
-                .append(".")
                 .append(primaryKey)
                 .append("=")
-                .append(this.tableName)
-                .append(".")
                 .append(foreignKey);
         return this;
     }

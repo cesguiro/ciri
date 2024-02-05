@@ -2,12 +2,13 @@ package es.cesguiro.dao.v10.impl;
 
 import es.cesguiro.dao.v10.Ciri;
 import es.cesguiro.dao.v10.entity.CiriEntity;
+import es.cesguiro.dao.v10.mapper.EntityMapper;
 import es.cesguiro.queryBuilder.DB;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +16,10 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
 
 
     private final T entityHelper;
+    private final EntityMapper<T> entityMapper;
 
-    protected CiriDao() {
+    public CiriDao(EntityMapper<T> entityMapper) {
+        this.entityMapper = entityMapper;
         try {
             entityHelper =  this.getEntityClass().getDeclaredConstructor().newInstance();
         } catch (InstantiationException e) {
@@ -30,31 +33,14 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
             }
     }
 
-
-
-    protected abstract Class<T> getEntityClass();
-
-    protected abstract T toEntity(ResultSet resultSet);
-
-    private List<T> toEntityList(ResultSet resultSet) {
-        List<T> entityList = new ArrayList<>();
-        try {
-            while (resultSet.next()) {
-                T entity = toEntity(resultSet);
-                entityList.add(entity);
-            }
-            return entityList;
-        }catch (SQLException e) {
-            throw new RuntimeException("Error while converting ResultSet to entity list", e);
-        }
-    }
+    public abstract Class<T> getEntityClass();
 
     @Override
     public List<T> findAll() {
         ResultSet resultSet = DB
                 .table(entityHelper.getTableName())
                 .get();
-        return toEntityList(resultSet);
+        return entityMapper.toEntityList(resultSet);
     }
 
     @Override
@@ -62,27 +48,30 @@ public abstract class CiriDao<T extends CiriEntity, PK> implements Ciri<T, PK> {
         ResultSet resultSet = DB
                 .table(entityHelper.getTableName())
                 .find(id);
-        return Optional.ofNullable(toEntity(resultSet));
-    }
-
-    public Optional<T> findOneByField(String field, Object fieldValue) {
-        ResultSet resultSet = DB
-                .table(entityHelper.getTableName())
-                .where(field, "=", fieldValue)
-                .get();
-        try {
-            if(!resultSet.next()) {
-                return Optional.empty();
-            }
-            return Optional.of(toEntity(resultSet));
-        } catch (SQLException e) {
-            throw new RuntimeException("Error while converting ResultSet to entity", e);
-        }
+        return Optional.ofNullable(entityMapper.toEntity(resultSet));
     }
 
 
     @Override
     public T save(T entity) {
+        String id = entityHelper.getIdDBFieldName();
+        Object value;
+        try {
+            // Obtener el valor del campo usando reflexión
+            Field field = entity.getClass().getDeclaredField(id);
+            field.setAccessible(true); // Para permitir el acceso a campos privados
+            value = field.get(entity);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Can not read primary key", e);
+        }
+
+        ResultSet resultSet = DB.table(entityHelper.getTableName())
+                .find(value);
+        if(resultSet == null) {
+            //insertar
+        } else {
+            //actualizar
+        }
         return null;
     }
 

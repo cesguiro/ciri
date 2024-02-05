@@ -33,8 +33,8 @@ public class OrderEntity extends CiriEntity {
         return null;
     }
 
-    @Override
+    /*@Override
     public Map<String, String> getJavaToDBColumnMapping() {
         return null;
-    }
+    }*/
 }

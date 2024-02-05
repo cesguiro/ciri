@@ -150,9 +150,9 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void testFindByIsbn(){
-        try(ResultSet resultSet = DB.table("books").find("9788433927996")) {
-            assertEquals("9788433927996", resultSet.getString("isbn"));
+    public void testFindById(){
+        try(ResultSet resultSet = DB.table("books").find(3)) {
+            assertEquals("9786074213485", resultSet.getString("isbn"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -161,7 +161,7 @@ public class QueryBuilderTest {
 
     @Test
     public void testFindByNonExistingIsbn(){
-        try(ResultSet resultSet = DB.table("books").find("9")) {
+        try(ResultSet resultSet = DB.table("books").find("25")) {
             assertEquals(null, resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -200,7 +200,7 @@ public class QueryBuilderTest {
         int rowsAfected = DB.table("books")
                 .where("isbn", "=", "9788496173729")
                 .update(parameters);
-        try(ResultSet resultSet = DB.table("books").find("9788496173729")) {
+        try(ResultSet resultSet = DB.table("books").find(11)) {
             assertAll(
                     () -> {
                         assertAll(
@@ -233,7 +233,7 @@ public class QueryBuilderTest {
         );
         int lastId = (int) DB.table("books")
                 .insert(parameters);
-        try(ResultSet resultSet = DB.table("books").find(isbn)) {
+        try(ResultSet resultSet = DB.table("books").find(13)) {
             assertAll(
                     () -> {
                         assertAll(
@@ -330,8 +330,10 @@ public class QueryBuilderTest {
     @Test
     public void testBooksJoinPublishers() {
         try(ResultSet resultSet = DB.table("books")
-                .join("publishers", "id", "publisher_id")
-                .select("books.*", "publishers.name").get()) {
+                .join("publishers", "publishers.id", "books.publisher_id")
+                .select("books.*", "publishers.name")
+                .where("books.id", "=", 1)
+                .get()) {
             if(resultSet.next()) {
                 assertAll(
                         () -> {
