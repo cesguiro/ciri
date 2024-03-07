@@ -18,7 +18,7 @@ import java.util.Map;
 public class OrderEntity extends CiriEntity {
 
     @Id
-    private int id;
+    private Integer id;
     @Column("order_date")
     private Date orderDate;
     private int status;
@@ -30,6 +30,16 @@ public class OrderEntity extends CiriEntity {
 
     @Override
     public String getIdDBFieldName() {
+        return null;
+    }
+
+    @Override
+    public Object getIdValue() {
+        return this.id;
+    }
+
+    @Override
+    public Map<String, String> getJavaToDBColumnMapping() {
         return null;
     }
 

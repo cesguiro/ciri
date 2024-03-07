@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME) //la anotación estará disponible en tiempo de ejecución
 @Target(ElementType.FIELD) //Puede ser aplicada a clases
-public @interface Id {
+public @interface ManyToOne {
+    String joinColumn();
 }

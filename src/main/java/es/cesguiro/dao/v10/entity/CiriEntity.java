@@ -8,19 +8,21 @@ import lombok.ToString;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 @Getter
 @ToString
 public abstract class CiriEntity {
-
-
+    
     public abstract String getTableName();
 
     public abstract String getIdDBFieldName();
 
-    //public abstract Map<String, String> getJavaToDBColumnMapping();
+    public abstract Object getIdValue();
+
+    public abstract Map<String, String> getJavaToDBColumnMapping();
 
     @Override
     public boolean equals(Object o) {

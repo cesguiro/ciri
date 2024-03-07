@@ -1,37 +1,36 @@
-package ciriDao.v10.entity;
+package ciriDao.v20.entity;
 
-import ciriDao.v10.dao.BookCiriDao;
-import ciriDao.v10.dao.PublisherCiriDao;
-import ciriDao.v10.mapper.AuthorMapper;
-import ciriDao.v10.mapper.PublisherMapper;
+import ciriDao.v20.mapper.BookMapper;
+import ciriDao.v20.mapper.PublisherMapper;
 import es.cesguiro.common.annotations.Id;
-import es.cesguiro.dao.v10.entity.CiriEntity;
-import es.cesguiro.queryBuilder.DB;
+import es.cesguiro.common.annotations.ManyToOne;
+import es.cesguiro.common.annotations.TableName;
+import es.cesguiro.dao.v20.entity.CiriEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.Flow;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("books")
 public class BookEntity extends CiriEntity {
 
+    @Id
     private Integer id;
     private String isbn;
     private String title;
     private String synopsis;
     private BigDecimal price;
     private String cover;
+
+    @ManyToOne(joinColumn = "publisher_id")
     private PublisherEntity publisherEntity;
-    List<AuthorEntity> authorEntityList;
+
+    //List<AuthorEntity> authorEntityList;
 
     public BookEntity(int id, String isbn, String title, String synopsis, BigDecimal price, String cover) {
         this.id = id;
@@ -43,22 +42,8 @@ public class BookEntity extends CiriEntity {
     }
 
 
-    @Override
-    public String getTableName() {
-        return "books";
-    }
 
-    @Override
-    public String getIdDBFieldName() {
-        return "id";
-    }
-
-    @Override
-    public Object getIdValue() {
-        return this.id;
-    }
-
-    @Override
+    /*@Override
     public Map<String, String> getJavaToDBColumnMapping() {
         return Map.of(
                 "id", "id",
@@ -69,17 +54,16 @@ public class BookEntity extends CiriEntity {
                 "cover", "cover",
                 "publisherEntity", "publisher_id"
         );
-    }
+    }*/
 
     public PublisherEntity getPublisherEntity() {
         if(this.publisherEntity == null) {
-            this.publisherEntity = (PublisherEntity) this
-                    .manyToOne("publishers", "id", this.getId(), new PublisherMapper()).orElse(null);
+            this.publisherEntity = this.manyToOne(PublisherEntity.class, new PublisherMapper()).orElse(null);
         }
         return publisherEntity;
     }
 
-    public List<AuthorEntity> getAuthorEntityList() {
+   /* public List<AuthorEntity> getAuthorEntityList() {
         if(this.authorEntityList == null) {
             List<CiriEntity> ciriEntityList = this.manyToMany(
                     "authors",
@@ -103,27 +87,7 @@ public class BookEntity extends CiriEntity {
             this.authorEntityList = authorEntityList;
         }
         return this.authorEntityList;
-    }
-
-    /*@Override
-    public Map<String, String> getJavaToDBColumnMapping() {
-        return Map.of(
-                "id", "id",
-                "isbn", "isbn",
-                "title", "title",
-                "synopsis", "synopsis",
-                "publisherId", "publisher_id",
-                "price", "price",
-                "cover", "cover"
-        );
     }*/
 
-    /*public PublisherEntity getPublisherEntity() {
-        if(publisherEntity == null) {
-            PublisherCiriDao publisherCiriDao = new PublisherCiriDao();
-            this.setPublisherEntity(publisherCiriDao.findOneByField("id", this.getPublisherEntity().getId()));
-        }
-        return publisherEntity;
-    }*/
 
 }
