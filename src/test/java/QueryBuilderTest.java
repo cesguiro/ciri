@@ -6,6 +6,7 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
@@ -351,5 +352,31 @@ public class QueryBuilderTest {
         }
     }
 
+    @Test
+    public void testBooksJoinPublishersAndAuthors() {
+        try(ResultSet resultSet = DB.table("books")
+                .join("publishers", "publishers.id", "books.publisher_id")
+                .join("book_authors", "book_authors.book_id", "books.id")
+                .join("authors", "authors.id", "book_authors.author_id")
+                .select("books.*", "publishers.name", "authors.name")
+                .where("books.id", "=", 1)
+                .get()) {
+            if(resultSet.next()) {
+                assertAll(
+                        () -> {
+                            assertAll(
+                                    () -> assertEquals("9788433920423", resultSet.getString("books.isbn")),
+                                    () -> assertEquals("Editorial Anagrama", resultSet.getString("publishers.name")),
+                                    () -> assertEquals("John Kennedy Toole", resultSet.getString("authors.name"))
+                            );
+                        }
+                );
+            } else {
+                log.warn("No hay resultados en la tabla books");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
